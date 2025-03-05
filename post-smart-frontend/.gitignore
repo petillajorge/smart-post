@@ -1,0 +1,118 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+#
+# Additionally, see https://github.com/github/gitignore/blob/master/Global/Node.gitignore for a good Node.js template.
+
+# Dependencies
+/node_modules
+/.pnp
+.pnp.cjs
+
+# Testing
+/coverage
+
+# next.js build output
+/.next
+/out
+
+# Production
+/build
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+/tmp
+/dist
+/cache
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Optional files for VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Optional files for JetBrains IDEs
+.idea
+
+# Optional files for other editors
+*.swp
+*~
+.DS_Store
+
+# Next.js cache
+.next/cache
+
+# Next.js image cache
+.next/static/images
+
+# next-auth
+.nextauth
+
+# Optional: if you use contentlayer
+.contentlayer
+
+# Optional: if you use storybook
+storybook-static
+
+# Optional: if you use playwright
+/test-results/
+/playwright-report/
