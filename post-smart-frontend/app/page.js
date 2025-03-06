@@ -1,6 +1,6 @@
 "use client"; // This is a client component
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useRef } from 'react';
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,10 @@ import { Input } from "@/components/ui/input";
 
 export default function LandingPage() {
   const mainRef = useRef(null);
+  const canvasRef = useRef(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [hearts, setHearts] = useState([]);
+
 
   useEffect(() => {
     const setMainHeight = () => {
@@ -25,8 +29,111 @@ export default function LandingPage() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    canvas.width = width;
+    canvas.height = height;
+
+    const gridSize = 50;
+    const offsetX = (mousePosition.x - width / 2) / 20;
+    const offsetY = (mousePosition.y - height / 2) / 20;
+
+    ctx.clearRect(0, 0, width, height);
+
+    // Subtle gradient background
+    const gradient = ctx.createLinearGradient(0, 0, 0, height);
+    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.4)'); // Light base
+    gradient.addColorStop(1, 'rgba(220, 220, 230, 0.8)'); // Slightly darker bottom
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, width, height);
+
+    ctx.strokeStyle = 'rgba(180, 180, 190, 0.42)'; // Thin, light grid lines
+    ctx.lineWidth = 0.5;
+
+    // Vertical lines
+    for (let x = 0; x <= width; x += gridSize) {
+      const adjustedX = x + offsetX;
+      ctx.beginPath();
+      ctx.moveTo(adjustedX, 0);
+      ctx.lineTo(adjustedX, height);
+      ctx.stroke();
+    }
+
+    // Horizontal lines
+    for (let y = 0; y <= height; y += gridSize) {
+      const adjustedY = y + offsetY;
+      ctx.beginPath();
+      ctx.moveTo(0, adjustedY);
+      ctx.lineTo(width, adjustedY);
+      ctx.stroke();
+    }
+  }, [mousePosition]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHearts((prevHearts) => [
+        ...prevHearts,
+        {
+          id: Date.now(),
+          x: Math.random() < 0.5 ? 20 : window.innerWidth - 20,
+          y: window.innerHeight + 20,
+        },
+      ]);
+    }, 1500); // Adjust interval for heart frequency
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const heartVariants = {
+    initial: { opacity: 1, y: 0, scale: 0.8 },
+    animate: { y: -window.innerHeight - 20, opacity: 0, scale: 1.2, transition: { duration: 3 } },
+    exit: { opacity: 0 },
+  };
+
   return (
-    <div className="relative min-h-screen bg-white text-black overflow-hidden">
+    <div className="relative min-h-screen bg-transparent text-black overflow-hidden">
+      <canvas ref={canvasRef} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }} />
+      <AnimatePresence>
+        {hearts.map((heart) => (
+          <motion.div
+            key={heart.id}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={heartVariants}
+            style={{
+              position: 'absolute',
+              left: heart.x,
+              top: heart.y,
+              pointerEvents: 'none',
+              zIndex: 0,
+              background: 'linear-gradient(to right, #feda75, #d62976, #962fbf, #4f5bd5)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontSize: '2rem',
+            }}
+            onAnimationComplete={() => setHearts((prev) => prev.filter((h) => h.id !== heart.id))}
+          >
+            ❤️
+          </motion.div>
+        ))}
+      </AnimatePresence>
       {/* Header */}
       <header className="fixed top-0 w-full backdrop-blur-md bg-black/50 p-4 shadow-md flex justify-between items-center px-8 z-50">
         <h1 className="text-2xl font-bold text-white px-3">Smart Post</h1>
@@ -69,7 +176,7 @@ export default function LandingPage() {
 
         {/* Input Formulary */}
         <motion.div
-          className="w-full mt-8" // Adjusted mt for spacing
+          className="w-full mt-8 mb-16" // Adjusted mt for spacing
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -97,7 +204,7 @@ export default function LandingPage() {
                 }}
               />
               <label htmlFor="fileInput" id="fileLabel" className="cursor-pointer bg-gray-200 p-2 rounded text-center w-full">
-                Upload Image or Video
+                Click to Upload Image or Video
               </label>
             </div>
             <button className="w-full text-white font-semibold py-3 rounded-lg shadow-md bg-gradient-to-r from-yellow-500 via-pink-500 to-purple-500 hover:from-yellow-600 hover:via-pink-600 hover:to-purple-600">
@@ -108,18 +215,54 @@ export default function LandingPage() {
       </main>
 
       {/* Features Section */}
-      <section id="features" className="py-12 md:py-20 bg-white text-black flex flex-col md:flex-row items-center justify-between"> {/*Reduced p-20 to py-12*/}
-        <motion.div className="md:w-1/2 px-6">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Why Choose PostSmith?</h2>
-          <p className="text-lg">Create engaging, high-quality posts with minimal effort. Our AI-driven platform helps maximize reach and engagement.</p>
-        </motion.div>
-        <motion.div className="md:w-1/2 flex justify-center mt-8 md:mt-0 px-6">
-          <div className="w-full max-w-lg bg-gray-100 p-6 rounded-lg shadow-lg">Carrousel Placeholder for Success Stories</div>
-        </motion.div>
+      <section id="features" className="py-12 md:py-20 bg-yellow-100 border-t border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">Explore PostSmith</h2>
+            <p className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
+              Explore the latest and greatest PostSmith has to offer. Fast-track your post generation by exploring our features.
+            </p>
+          </div>
+          <div className="mt-10">
+            <div className="relative">
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                {/* Simulated ImagesSpread */}
+                {[1, 2, 3, 4, 5].map((index) => (
+                  <div key={index} className={`relative ${index === 3 ? 'md:col-span-2' : ''}`}>
+                    <div className="aspect-w-1 aspect-h-1 rounded-lg overflow-hidden">
+                      <img
+                        src={`https://source.unsplash.com/random/400x400?sig=${index}`}
+                        alt={`Feature ${index}`}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="mt-10 overflow-hidden">
+            <div className="marquee-container relative w-full overflow-hidden">
+              <div className="marquee flex whitespace-nowrap animate-marquee">
+                {['AI Generation', 'Platform Optimization', 'Image/Video Upload', 'Customization', 'Scheduling', 'Analytics'].map((tag, index) => (
+                  <a key={index} href="#" className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
+                    {tag}
+                  </a>
+                ))}
+                {/* Duplicate for seamless loop */}
+                {['AI Generation', 'Platform Optimization', 'Image/Video Upload', 'Customization', 'Scheduling', 'Analytics'].map((tag, index) => (
+                  <a key={`duplicate-${index}`} href="#" className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
+                    {tag}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-12 md:py-20 bg-gray-100 text-black flex items-center justify-center"> {/*Reduced p-20 to py-12*/}
+      <section id="pricing" className="py-12 md:py-20 bg-transparent-100 text-black flex items-center justify-center"> {/*Reduced p-20 to py-12*/}
         <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1 }} className="px-6">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Choose Your Plan</h2>
           <div className="flex flex-col md:flex-row space-x-0 md:space-x-8 space-y-6 md:space-y-0">
