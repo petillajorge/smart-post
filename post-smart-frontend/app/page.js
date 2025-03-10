@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react';
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import SocialMediaPostGenerator from "@/components/ui/postGenerator";
 
 
 export default function LandingPage() {
@@ -212,6 +213,7 @@ export default function LandingPage() {
             </button>
           </motion.div>
         </motion.div>
+        <SocialMediaPostGenerator />
       </main>
 
       {/* Features Section */}
