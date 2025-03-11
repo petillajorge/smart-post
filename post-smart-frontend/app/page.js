@@ -96,13 +96,13 @@ export default function LandingPage() {
           y: window.innerHeight + 20,
         },
       ]);
-    }, 1500); // Adjust interval for heart frequency
+    }, 1250); // Adjust interval for heart frequency
 
     return () => clearInterval(interval);
   }, []);
 
   const heartVariants = {
-    initial: { opacity: 1, y: 0, scale: 0.8 },
+    initial: { opacity: 1, y: 0, scale: 0.9 },
     animate: { y: -window.innerHeight - 20, opacity: 0, scale: 1.2, transition: { duration: 3 } },
     exit: { opacity: 0 },
   };
@@ -176,43 +176,7 @@ export default function LandingPage() {
         </div>
 
         {/* Input Formulary */}
-        <motion.div
-          className="w-full mt-8 mb-16" // Adjusted mt for spacing
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <motion.div
-            className="bg-white text-black p-6 md:p-8 rounded-xl shadow-lg w-[90%] max-w-lg mx-auto border border-gray-300" // Added mx-auto for centering
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <h3 className="text-2xl font-semibold mb-4">Generate Your Post</h3>
-            <input type="text" placeholder="Your Username" className="w-full p-2 border rounded mb-4" />
-            <input type="text" placeholder="Post Content" className="w-full p-2 border rounded mb-4" />
-            <div className="w-full p-2 border rounded mb-4 flex flex-col items-center">
-              <input
-                type="file"
-                accept="image/*,video/*"
-                className="hidden"
-                id="fileInput"
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  if (file) {
-                    document.getElementById('fileLabel').textContent = file.name;
-                  }
-                }}
-              />
-              <label htmlFor="fileInput" id="fileLabel" className="cursor-pointer bg-gray-200 p-2 rounded text-center w-full">
-                Click to Upload Image or Video
-              </label>
-            </div>
-            <button className="w-full text-white font-semibold py-3 rounded-lg shadow-md bg-gradient-to-r from-yellow-500 via-pink-500 to-purple-500 hover:from-yellow-600 hover:via-pink-600 hover:to-purple-600">
-              Generate Post
-            </button>
-          </motion.div>
-        </motion.div>
+        
         <SocialMediaPostGenerator />
       </main>
 
