@@ -120,7 +120,8 @@ const SocialMediaPostGenerator = () => {
         let geminiPrompt = `Generate an engaging social media post with the following requirements:
         - Topic: ${prompt}
         - Tone: ${tone}
-        - Word count: approximately ${wordCount} words`;
+        - Word count: approximately ${wordCount} words
+        - No quotes at start and end`;
         
         let requestParts = [geminiPrompt];
         
@@ -201,38 +202,64 @@ const SocialMediaPostGenerator = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4 bg-white rounded-lg shadow-md mb-16">
-      <h1 className="text-2xl font-bold text-center mb-6">Social Media Post Generator</h1>
-      
+    <div className="w-full max-w-4xl mx-auto p-4 bg-gradient-to-br from-purple-400 to-yellow-100 rounded-lg shadow-2xl mb-16">
+      {/*<h1 className="text-2xl font-bold text-center mb-6">Social Media Post Generator</h1>*/}
       {/* First Row - Input Form */}
-      <div className="mb-6 p-4 bg-gray-50 rounded-lg select-none">
+      <div className="mb-6 p-4 bg-purple-50 rounded-lg select-none" >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="col-span-1 flex items-center">
+          <label className="block text-sm font-medium caret-color-black">
+            Which is your post about?
+          </label>
+        </div>
+        <div className="col-span-1 flex justify-end">
+          <button
+            className={`
+              p-3 
+              rounded-full 
+              flex 
+              items-center 
+              justify-center 
+              hover:bg-orange-500 
+              bg-orange-300
+              transition-colors 
+              font-medium
+              text-white
+              ${isGenerating ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+            `}
+            onClick={handleMagicWandClick}
+            disabled={isGenerating}
+            title="Get random prompt suggestion"
+          >
+            Generate Prompt
+            <Wand2 className="h-5 w-5 ml-2 text-white" />
+          </button>
+        </div>
+      </div>
+
+  {/* Second Row - Textarea */}
+  <div className="mt-4">
+    <textarea
+      className="w-full p-2 border rounded-md h-24 bg-white"
+      placeholder="Enter what you want to post about..."
+      maxLength={600}
+      value={prompt}
+      onChange={(e) => setPrompt(e.target.value)}
+      disabled={isGenerating}
+      style={{ resize: "vertical", minHeight: "42px" }}
+    />
+    <div className="text-right text-xs text-gray-500">
+      {prompt.length}/600 characters
+    </div>
+  </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-          <div className="col-span-1 md:col-span-2">
-            <label className="block text-sm font-medium mb-1 caret-color-black">Post Prompt (max 600 characters)</label>
-            <button 
-                className={`p-1 rounded-full hover:bg-gray-200 transition-colors ${isGenerating ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-                onClick={handleMagicWandClick}
-                disabled={isGenerating}
-                title="Get random prompt suggestion"
-            >
-                <Wand2 className="h-4 w-4 text-purple-600" />
-            </button>
-            <textarea 
-              className="w-full p-2 border rounded-md h-24"
-              placeholder="Enter what you want to post about..."
-              maxLength={600}
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              disabled={isGenerating}
-              style={{ resize: "vertical", minHeight: "42px" }}
-            />
-            <div className="text-right text-xs text-gray-500">{prompt.length}/600 characters</div>
-          </div>
+          
+
           
           <div>
             <label className="block text-sm font-medium mb-1">Tone</label>
             <select 
-              className="w-full p-2 border rounded-md"
+              className="w-full p-2 border rounded-md bg-white"
               value={tone}
               onChange={(e) => setTone(e.target.value)}
               disabled={isGenerating}
@@ -243,18 +270,41 @@ const SocialMediaPostGenerator = () => {
             </select>
           </div>
           
-          <div>
-            <label className="block text-sm font-medium mb-1">Word Count</label>
-            <input 
-              type="number" 
-              min="10" 
+          <div className="w-full">
+            <label className="block text-sm font-medium mb-1">Word Count: {wordCount}</label>
+            <input
+              type="range"
+              min="5"
               max="200"
-              className="w-full p-2 border rounded-md"
+              className="w-full h-3 bg-gradient-to-r from-yellow-500 via-pink-500 to-purple-500 rounded-full appearance-none cursor-pointer"
               value={wordCount}
               onChange={(e) => setWordCount(parseInt(e.target.value))}
               disabled={isGenerating}
+              style={{
+                '--thumb-size': '22px', // Adjust the size here
+              }}
             />
+            <style jsx>{`
+              input[type='range']::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                width: var(--thumb-size);
+                height: var(--thumb-size);
+                background: #a0a0a0; /* Grey color */
+                border-radius: 50%;
+                cursor: pointer;
+              }
+
+              input[type='range']::-moz-range-thumb {
+                width: var(--thumb-size);
+                height: var(--thumb-size);
+                background: #a0a0a0;
+                border-radius: 50%;
+                cursor: pointer;
+              }
+            `}</style>
           </div>
+
           
           <div className="col-span-1 md:col-span-2">
             <label className="block text-sm font-medium mb-1">Image (optional)</label>

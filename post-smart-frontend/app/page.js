@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SocialMediaPostGenerator from "@/components/ui/postGenerator";
+import Header from "@/components/ui/Header"
 
 
 export default function LandingPage() {
@@ -136,16 +137,7 @@ export default function LandingPage() {
         ))}
       </AnimatePresence>
       {/* Header */}
-      <header className="fixed top-0 w-full backdrop-blur-md bg-black/50 p-4 shadow-md flex justify-between items-center px-8 z-50">
-        <h1 className="text-2xl font-bold text-white px-3">Smart Post</h1>
-        <nav>
-          <ul className="flex space-x-6 text-white">
-            <li><a href="#features" className="hover:text-gray-400">Features</a></li>
-            <li><a href="#pricing" className="hover:text-gray-400">Pricing</a></li>
-            <li><a href="#contact" className="hover:text-gray-400">Contact</a></li>
-          </ul>
-        </nav>
-      </header>
+      <Header />
 
       {/* Main Content */}
       <main className="flex flex-col items-center justify-center text-center px-6 pt-[80px]" > {/* Adjusted pt to accommodate header */}
