@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Loader, Image as ImageIcon, RefreshCw, Share, Wand2 } from 'lucide-react';
+import ShinyButton from './ShinyButton';
 
 const SocialMediaPostGenerator = () => {
   const [prompt, setPrompt] = useState('');
@@ -205,43 +206,44 @@ const SocialMediaPostGenerator = () => {
     <div className="w-full max-w-4xl mx-auto p-4 bg-gradient-to-br from-purple-400 to-yellow-100 rounded-lg shadow-2xl mb-16">
       {/*<h1 className="text-2xl font-bold text-center mb-6">Social Media Post Generator</h1>*/}
       {/* First Row - Input Form */}
-      <div className="mb-6 p-4 bg-purple-50 rounded-lg select-none" >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="col-span-1 flex items-center">
-          <label className="block text-sm font-medium caret-color-black">
-            Which is your post about?
-          </label>
-        </div>
-        <div className="col-span-1 flex justify-end">
-          <button
-            className={`
-              p-3 
-              rounded-full 
-              flex 
-              items-center 
-              justify-center 
-              hover:bg-orange-500 
-              bg-orange-300
-              transition-colors 
-              font-medium
-              text-white
-              ${isGenerating ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-            `}
-            onClick={handleMagicWandClick}
-            disabled={isGenerating}
-            title="Get random prompt suggestion"
-          >
-            Generate Prompt
-            <Wand2 className="h-5 w-5 ml-2 text-white" />
-          </button>
-        </div>
-      </div>
+      <div className="mb-6 p-4 bg-purple-50 rounded-lg select-none">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="col-span-1 flex justify-center sm:justify-start items-center">
+              <label className="block text-xl md:ml-1 font-medium caret-color-black">
+                What is your post about?
+              </label>
+            </div>
+            <div className="col-span-1 flex justify-center sm:justify-end items-center">
+              <button
+                className={`
+                  p-2 
+                  rounded-lg
+                  flex 
+                  items-center 
+                  justify-center 
+                  hover:bg-purple-500 
+                  bg-purple-400
+                  transition-colors 
+                  font-medium
+                  text-white
+                  shadow-md
+                  ${isGenerating ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+                `}
+                onClick={handleMagicWandClick}
+                disabled={isGenerating}
+                title="Get random prompt suggestion"
+              >
+                Generate Prompt
+                <Wand2 className="h-5 w-5 ml-2 text-white" />
+              </button>
+            </div>
+          </div>
 
   {/* Second Row - Textarea */}
   <div className="mt-4">
     <textarea
       className="w-full p-2 border rounded-md h-24 bg-white"
-      placeholder="Enter what you want to post about..."
+      placeholder="Write information for preparing your post..."
       maxLength={600}
       value={prompt}
       onChange={(e) => setPrompt(e.target.value)}
@@ -253,13 +255,10 @@ const SocialMediaPostGenerator = () => {
     </div>
   </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-          
-
-          
           <div>
-            <label className="block text-sm font-medium mb-1">Tone</label>
+            <label className="block text-lg font-medium mt-1 mb-1">Tone</label>
             <select 
-              className="w-full p-2 border rounded-md bg-white"
+              className="w-full p-2 border rounded-md bg-white text-grey bg-grey-300 "
               value={tone}
               onChange={(e) => setTone(e.target.value)}
               disabled={isGenerating}
@@ -271,12 +270,12 @@ const SocialMediaPostGenerator = () => {
           </div>
           
           <div className="w-full">
-            <label className="block text-sm font-medium mb-1">Word Count: {wordCount}</label>
+            <label className="block text-lg font-medium mt-1 mb-1">Word Count: {wordCount}</label>
             <input
               type="range"
               min="5"
               max="200"
-              className="w-full h-3 bg-gradient-to-r from-yellow-500 via-pink-500 to-purple-500 rounded-full appearance-none cursor-pointer"
+              className="w-full h-3 mt-3 bg-gradient-to-r from-yellow-500 via-pink-500 to-purple-500 rounded-full appearance-none cursor-pointer"
               value={wordCount}
               onChange={(e) => setWordCount(parseInt(e.target.value))}
               disabled={isGenerating}
@@ -304,12 +303,11 @@ const SocialMediaPostGenerator = () => {
               }
             `}</style>
           </div>
-
           
           <div className="col-span-1 md:col-span-2">
-            <label className="block text-sm font-medium mb-1">Image (optional)</label>
+            <label className="block text-lg font-medium mb-1">Upload your post image (optional)</label>
             <div 
-              className={`border-2 border-dashed rounded-md p-4 flex flex-col items-center justify-center h-40 cursor-pointer bg-gray-100 ${isGenerating ? 'opacity-50 pointer-events-none' : ''}`}
+              className={`border-2 border-dashed rounded-md p-4 flex flex-col items-center justify-center h-32 cursor-pointer bg-gray-100 ${isGenerating ? 'opacity-50 pointer-events-none' : ''}`}
               onClick={() => !isGenerating && fileInputRef.current.click()}
               onDragOver={handleDragOver}
               onDrop={!isGenerating ? handleDrop : null}
@@ -358,13 +356,13 @@ const SocialMediaPostGenerator = () => {
       {/* Second Row - Results */}
       <div className="p-4 bg-gray-50 rounded-lg min-h-40">
         <h2 className="text-lg font-semibold mb-2">Generated Post</h2>
-        <div className="bg-white p-4 rounded-md border mb-4 min-h-24">
+        <div className="bg-white p-4 rounded-md border mb-4 min-h-16">
           {error ? (
             <p className="text-red-500">{error}</p>
           ) : displayText ? (
             <p className="whitespace-pre-wrap">{displayText}</p>
           ) : isGenerating ? (
-            <div className="flex justify-center items-center h-20">
+            <div className="flex justify-center items-center h-16">
               <Loader className="animate-spin h-6 w-6 text-gray-400" />
             </div>
           ) : (
