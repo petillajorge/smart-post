@@ -116,3 +116,7 @@ storybook-static
 # Optional: if you use playwright
 /test-results/
 /playwright-report/
+
+#backend folder
+post-smart-backend/
+post-smart-backend/venv/
