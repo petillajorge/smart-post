@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Loader, Image as ImageIcon, RefreshCw, Share, Wand2 } from 'lucide-react';
-//import { supabase } from '../../lib/supabaseClient'; // Import your Supabase client
+import { supabase } from '../../lib/supabaseClient'; // Import your Supabase client
 
-const PostGenerator = () => {
+
+const SocialMediaPostGenerator = () => {
   const [prompt, setPrompt] = useState('');
   const [tone, setTone] = useState('Normal');
   const [wordCount, setWordCount] = useState(50);
@@ -127,7 +128,7 @@ const PostGenerator = () => {
         let requestParts = [geminiPrompt];
         
         // Add image if available
-        //let imageUrl = null;
+        let imageUrl = null;
         if (imagePreview) {
           const imageData = base64ToBinary(imagePreview);
           const mimeType = getMimeTypeFromDataUrl(imagePreview);
@@ -141,6 +142,26 @@ const PostGenerator = () => {
           
           // Add context about the image to the prompt
           geminiPrompt += "\n- This post should reference the attached image in a relevant way.";
+          
+          const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${mimeType.split('/')[1]}`;
+          console.log(`Filename is: ${fileName}`);
+          const { error: uploadError } = await supabase.storage
+                .from('post-images')
+                .upload(`images/${fileName}`, base64ToBinary(imagePreview), {
+                    contentType: mimeType,
+                    upsert: false,
+                });
+
+          if (uploadError) {
+                  console.error('Image upload error:', uploadError);
+                  setError('Failed to upload image. Please try again.');
+                  alert('Failed to upload image. Please try again.');
+                  setIsGenerating(false);
+                  return; // Stop further processing
+              }
+
+            imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/post-images/images/${fileName}`;
+        
         }
         
         // API call to Next.js backend route that will handle Gemini API
@@ -168,6 +189,41 @@ const PostGenerator = () => {
         if (data && data.text) {
             setGeneratedText(data.text);
             setIsGenerating(false);
+            // Get the current user
+            const { data: userData, error: userError } = await supabase.auth.getUser();
+
+          if (userError || !userData?.user) {
+              console.error('Error getting user:', userError);
+              setError('Authentication error. Please log in again.');
+              alert('Authentication error. Please log in again.');
+              return;
+          }
+
+          const userId = userData.user.id;
+          console.log(`User ID: ${userId}`);
+
+          const insertData = {
+              description: prompt,
+              tone: tone,
+              word_length: wordCount,
+              image_url: imageUrl,
+              generated_description: data.text,
+              timestamp: new Date(),
+              user_id: userId,
+          };
+
+          console.log('Inserting data:', insertData);
+
+          // Save to Supabase database
+          const { error: insertError } = await supabase
+              .from('requests')
+              .insert(insertData);
+
+          if (insertError) {
+              console.error('Supabase database error:', insertError);
+              setError('Failed to save post data.');
+              alert('Failed to save post data.');
+          }
       } else {
         throw new Error('Invalid response format');
       }
@@ -387,4 +443,4 @@ const PostGenerator = () => {
   );
 };
 
-export default PostGenerator;
+export default SocialMediaPostGenerator;

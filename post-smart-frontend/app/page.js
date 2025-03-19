@@ -3,18 +3,23 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useRef } from 'react';
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import SocialMediaPostGenerator from "@/components/ui/postGenerator";
+import PostGenerator from "@/components/ui/PostGenerator";
 import Header from "@/components/ui/Header"
 import InfoBlock from "@/components/ui/InfoBlock";
+import SignUpWithEmail from "@/components/ui/SignUp";
+import SignInWithEmail from "@/components/ui/SignIn";
+import AuthStatus from "@/components/ui/AuthStatus";
+import handleSignOut from "@/components/ui/SignOut";
+import ImageDecoderBase64 from "@/components/ui/ImageDecoderBase64";
+import AutoLogout from "@/components/ui/AutoLogout";
+
 
 
 export default function LandingPage() {
   const mainRef = useRef(null);
   const canvasRef = useRef(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [hearts, setHearts] = useState([]);
+  //const [hearts, setHearts] = useState([]);
 
 
   useEffect(() => {
@@ -153,7 +158,7 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: -60 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2 }}
-            className="text-5xl md:text-6xl font-extrabold mb-4 "
+            className="text-5xl md:text-7xl font-extrabold mb-4 "
           >
             Smart Post
           </h1>
@@ -161,7 +166,7 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2 }}
-            className="text-3xl md:text-5xl font-extrabold mb-4"
+            className="text-3xl md:text-4xl font-extrabold mb-4"
           >
             AI-Powered Social Media Post Generation
           </h2>
@@ -174,8 +179,17 @@ export default function LandingPage() {
           </p>
         </div>
 
+        {/* Tests */}
+        {/*
+        <SignUpWithEmail/>
+        <SignInWithEmail/>
+        <AuthStatus />
+        <button onClick={handleSignOut}>Sign Out</button>
+        <ImageDecoderBase64 imageId="@components/ui/1742345915164-qa3ju6ero79.jpeg"/>
+        */}
+        <AutoLogout />
         {/* Input Formulary */}
-        <SocialMediaPostGenerator />
+        <PostGenerator />
       </main>
 
       {/* Features Section */}
