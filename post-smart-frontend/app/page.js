@@ -3,15 +3,16 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useRef } from 'react';
 import { useState } from "react";
-import PostGenerator from "@/components/ui/PostGenerator";
-import Header from "@/components/ui/Header"
-import InfoBlock from "@/components/ui/InfoBlock";
-import SignUpWithEmail from "@/components/ui/SignUp";
-import SignInWithEmail from "@/components/ui/SignIn";
-import AuthStatus from "@/components/ui/AuthStatus";
-import handleSignOut from "@/components/ui/SignOut";
-import ImageDecoderBase64 from "@/components/ui/ImageDecoderBase64";
-import AutoLogout from "@/components/ui/AutoLogout";
+//import PostGenerator from "../components/ui/PostGenerator";
+import Header from "../components/ui/Header"
+import InfoBlock from "../components/ui/InfoBlock";
+import SignUpWithEmail from "../components/ui/SignUp";
+import SignInWithEmail from "../components/ui/SignIn";
+import AuthStatus from "../components/ui/AuthStatus";
+import SignOut from "../components/ui/SignOut";
+//import ImageDecoderBase64 from "../components/ui/ImageDecoderBase64";
+import AutoLogout from "../components/ui/AutoLogout";
+import PostGeneratorAuth from "../components/ui/PostGeneratorAuth";
 
 
 
@@ -184,17 +185,20 @@ export default function LandingPage() {
         <SignUpWithEmail/>
         <SignInWithEmail/>
         <AuthStatus />
-        <button onClick={handleSignOut}>Sign Out</button>
+        <SignOut />
         <ImageDecoderBase64 imageId="@components/ui/1742345915164-qa3ju6ero79.jpeg"/>
         */}
+        <SignUpWithEmail/>
+        <SignInWithEmail/>
+        <AuthStatus />
+        <SignOut />
         <AutoLogout />
         {/* Input Formulary */}
-        <PostGenerator />
+        <PostGeneratorAuth />
       </main>
 
       {/* Features Section */}
       <InfoBlock />
-
 
       
 

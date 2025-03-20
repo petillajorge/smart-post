@@ -9,12 +9,12 @@ const AutoLogout = () => {
         //console.log(`Your current session ${session.data.session} is going to be log out now.`)
         if (session.data?.session) {
           await supabase.auth.signOut();
-          console.log('User automatically logged out.');
+          //console.log('User automatically logged out.');
         } else {
-          console.log('No user session found.');
+          //console.log('No user session found.');
         }
       } catch (error) {
-        console.error('Error during auto logout:', error);
+        //console.error('Error during auto logout:', error);
       }
     };
 

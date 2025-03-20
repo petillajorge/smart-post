@@ -12,9 +12,10 @@ function SignInWithEmail() {
     });
 
     if (error) {
-      console.error('Error signing in:', error);
+      //console.error('Error signing in:', error);
       alert('Error signing in');
     }
+
   }
 
   return (
